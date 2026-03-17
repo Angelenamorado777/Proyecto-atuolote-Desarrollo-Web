@@ -1,31 +1,20 @@
 const express = require('express');
-const mysql = require('mysql2');
-
 const app = express();
+require('dotenv').config();
+
+const authRoute = require('./routes/authRoute');
 
 app.use(express.json());
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'autolote_user',
-    password: 'autolote1234',
-    database: 'autolote_db'
-});
 
-db.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err.message);
-        return;
-    }
-    console.log('Conexión exitosa a MySQL');
-});
+
+app.use('/', authRoute);
 
 
 
 
 
-
-const PORT = 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
