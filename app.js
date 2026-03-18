@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 
 const authRoute = require('./routes/authRoute');
+const clientesRoute = require('./routes/clientesRoute');
 
 app.use(express.json());
 
@@ -10,7 +11,7 @@ app.use(express.json());
 
 app.use('/', authRoute);
 
-
+app.use('/', clientesRoute);
 
 
 
