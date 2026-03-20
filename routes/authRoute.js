@@ -72,4 +72,12 @@ router.post('/api/login', async (req, res) => {
   });
 });
 
+
+router.get('/api/gethash/:texto', async (req, res) => {
+  const hash = await bcrypt.hash(req.params.texto, 10);
+  res.send(hash);
+});
+
+
+
 module.exports = router;
