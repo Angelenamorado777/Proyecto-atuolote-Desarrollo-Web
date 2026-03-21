@@ -12,6 +12,11 @@ CREATE TABLE usuarios (
     creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO usuarios (nombre, apellido, correo, password_hash, rol)
+VALUES ('Julio', 'Iglesias', 'julioiglesias@gmail.com', '$2b$10$8.W3YFrKrLPss6amq4zAiufQF8INwcNR9D5gDjY35OQ70HCZ1CQci', 'admin');
+SELECT * FROM usuarios WHERE correo = 'joseph@gmail.com';
+
+
 -- Tabla de vehículos
 CREATE TABLE vehiculos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,7 +48,7 @@ CREATE TABLE consultas (
     tipo ENUM('informacion', 'prueba_manejo') DEFAULT 'informacion',
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE
-);
+); 
 
 -- Tabla de ventas
 CREATE TABLE ventas (
@@ -66,3 +71,4 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON autolote_db.* TO 'autolote_user'@'localh
 
 FLUSH PRIVILEGES;
 
+SELECT id, nombre, apellido, correo, rol FROM usuarios WHERE rol = 'admin';
