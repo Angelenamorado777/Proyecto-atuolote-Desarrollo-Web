@@ -11,9 +11,9 @@ const clientesRoute = require('./routes/clientesRoute')
 app.use(express.json());
 app.use(cors());
 
-app.use('/', clientesRoute);
-app.use('/', authRoute);
 
+app.use('/', authRoute);
+app.use('/', clientesRoute);
 
 
 
