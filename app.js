@@ -3,11 +3,14 @@ const app = express();
 require('dotenv').config();
 
 const authRoute = require('./routes/authRoute');
+const vehiculosRoute = require('./routes/vehiculosRoute');
+
+
 
 app.use(express.json());
 
 
-
+app.use('/', vehiculosRoute);
 app.use('/', authRoute);
 
 
