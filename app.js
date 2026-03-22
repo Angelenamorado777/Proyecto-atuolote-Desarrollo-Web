@@ -6,6 +6,7 @@ const authRoute = require('./routes/authRoute');
 const ventasRoute = require('./routes/ventasRoute');
 
 app.use(express.json());
+app.use(cors());
 
 
 app.use('/', authRoute);
