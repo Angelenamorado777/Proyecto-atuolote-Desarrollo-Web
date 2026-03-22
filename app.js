@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
+
 const cors = require('cors');
 
 const authRoute = require('./routes/authRoute');
+const clientesRoute = require('./routes/clientesRoute')
 const vehiculosRoute = require('./routes/vehiculosRoute');
 
 
@@ -13,7 +15,7 @@ app.use(cors());
 
 app.use('/', vehiculosRoute);
 app.use('/', authRoute);
-
+app.use('/', clientesRoute);
 
 
 
