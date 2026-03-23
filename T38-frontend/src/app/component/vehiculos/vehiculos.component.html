@@ -1,4 +1,30 @@
-<ul *ngFor="let vehiculo of vehiculos">
-    <li>{{ vehiculo.codigo }}</li>
-    <li>{{ vehiculo.marca }}</li>
-</ul>
+<div>
+  <h2>Catálogo de Vehículos</h2>
+
+  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
+  <table *ngIf="vehiculos.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Año</th>
+        <th>Precio</th>
+        <th>Disponible</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehiculo of vehiculos">
+        <td>{{ vehiculo.id }}</td>
+        <td>{{ vehiculo.marca }}</td>
+        <td>{{ vehiculo.modelo }}</td>
+        <td>{{ vehiculo.anio }}</td>
+        <td>{{ vehiculo.precio }}</td>
+        <td>{{ vehiculo.disponible ? 'Sí' : 'No' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="vehiculos.length === 0 && !errorMessage">No hay vehículos registrados.</p>
+</div>

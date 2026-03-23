@@ -1,6 +1,6 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/user.service';
+import { VehiculoService } from '../../services/vehiculo.service';
 
 @Component({
   selector: 'app-vehiculos',
@@ -8,29 +8,29 @@ import { UserService } from '../../services/user.service';
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss'
 })
-export class VehiculosComponent implements OnInit{
+export class VehiculosComponent implements OnInit {
   vehiculos: any[] = [];
   errorMessage: string = '';
-  constructor(private usersService: UserService) {}
+
+  constructor(private vehiculoService: VehiculoService) {}
+
   ngOnInit() {
     this.loadVehiculos();
   }
 
-  loadVehiculos(){
+  loadVehiculos() {
     this.errorMessage = '';
-    this.usersService.getVehiculos().subscribe({
+    this.vehiculoService.getVehiculos().subscribe({
       next: (data) => {
-        this.vehiculos = data.results;
+        this.vehiculos = data;
       },
       error: (error) => {
-        console.error('Error al obtener usuarios:', error);
-
+        console.error('Error al obtener vehículos:', error);
         if (error.status === 401) {
-          this.errorMessage = error.error?.message || 'Credenciales incorrectas.';
+          this.errorMessage = error.error?.message || 'No autorizado.';
         } else {
           this.errorMessage = 'Ocurrió un error inesperado. Intenta de nuevo.';
         }
-
       }
     });
   }
