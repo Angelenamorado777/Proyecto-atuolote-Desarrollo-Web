@@ -30,7 +30,7 @@ router.get('/api/vehiculos/:id', (req, res) => {
     });
 });
 
-router.post('/api/vehiculos', (req, res) => {
+router.post('/api/vehiculos', authMiddleware,  (req, res) => {
     const { marca, modelo, anio, precio, disponible,  } = req.body;
 
     if (!marca || !modelo || !anio || !precio) {
@@ -56,7 +56,7 @@ router.post('/api/vehiculos', (req, res) => {
     );
 });
 
-router.put('/api/vehiculos/:id', (req, res) => {
+router.put('/api/vehiculos/:id', authMiddleware, (req, res) => {
     const { id } = req.params;
     const { marca, modelo, anio, precio, disponible } = req.body;
     if (!marca && !modelo && !anio && !precio && disponible === undefined) {
@@ -79,7 +79,7 @@ router.put('/api/vehiculos/:id', (req, res) => {
     });
 });
 
-router.delete('/api/vehiculos/:id', (req, res) => {
+router.delete('/api/vehiculos/:id', authMiddleware, (req, res) => {
     const { id } = req.params;
     const query = `DELETE FROM vehiculos WHERE id = ?`;
     db.query(query, [id], (error, results) => {
