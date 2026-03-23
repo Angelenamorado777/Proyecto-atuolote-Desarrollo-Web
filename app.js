@@ -4,10 +4,11 @@ require('dotenv').config();
 const cors = require('cors');
 const authRoute = require('./routes/authRoute');
 const ventasRoute = require('./routes/ventasRoute');
+const exchangeRoute = require('./routes/exchangeRoute');
 
 app.use(express.json());
 app.use(cors());
-
+app.use('/', exchangeRoute);
 
 
 
