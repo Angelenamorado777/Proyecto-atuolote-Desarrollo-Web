@@ -1,29 +1,30 @@
 const express = require ('express');
 const pool = require('../config/db');
 const authMiddleware = require('../middleware/authMiddleware');
-const AuthMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.get('/api/clientes', AuthMiddleware, (req, res) => {
+router.get('/api/clientes', authMiddleware, (req, res) => {
 
  pool.query('SELECT * FROM clientes', (error, results) => {
- if (error)return res.status(500).json({status: 500, menssage: "Error al obtener a los clientes"})
+ if (error)return res.status(500).json({status: 500, message: "Error al obtener a los clientes"})
  return res.status(200).json({status: 200, data: results});
  });
 
 });
 
-router.get('/api/clientes/:id', AuthMiddleware, (req, res) => {
+router.get('/api/clientes/:id', authMiddleware, (req, res) => {
   const id = req.params.id;
 
   pool.query('SELECT * FROM clientes WHERE id = ?', [id], (error, results) => {
     if (error) return res.status(500).json({ status: 500, message: "Error al solicitar el cliente"});
-    return res.status(200).json({status: 200, data: results});
+    if (results.length === 0) {return res.status(404).json({status: 404,message: "El ID no existe"});
+  }
+  return res.status(200).json({ status: 200, data: results[0] });
   });
 });
 
-router.post('/api/clientes', AuthMiddleware, (req, res) => {
+router.post('/api/clientes', authMiddleware, (req, res) => {
  const {nombre, apellido, correo, telefono, direccion} = req.body
 
  if (!nombre || !apellido || !correo) {
@@ -39,7 +40,7 @@ router.post('/api/clientes', AuthMiddleware, (req, res) => {
   });
 });
 
-router.put('/api/clientes/:id', AuthMiddleware, (req, res) => {
+router.put('/api/clientes/:id', authMiddleware, (req, res) => {
   const {nombre, apellido, correo, telefono, direccion} = req.body;
   const id = req.params.id;
   const sql = 'UPDATE clientes SET nombre=?, apellido=?, correo=?, telefono=?, direccion=? WHERE id=?'
@@ -51,7 +52,7 @@ router.put('/api/clientes/:id', AuthMiddleware, (req, res) => {
  });
 });
 
-router.delete('/api/clientes/:id', AuthMiddleware, (req, res) => {
+router.delete('/api/clientes/:id', authMiddleware, (req, res) => {
 
   const id = req.params.id;
   pool.query('DELETE FROM clientes WHERE id=?', [id], (error) => {
@@ -62,7 +63,7 @@ router.delete('/api/clientes/:id', AuthMiddleware, (req, res) => {
  });
 });
 
-router.get('/api/consultas/cliente/:id', (req, res) => {
+router.get('/api/consultas/cliente/:id', authMiddleware, (req, res) => {
   const id = req.params.id;
   const sql = 'SELECT * FROM consultas WHERE id_cliente = ? ORDER BY fecha DESC';
 
@@ -73,7 +74,7 @@ router.get('/api/consultas/cliente/:id', (req, res) => {
 });
 
 
-router.post('/api/consultas', AuthMiddleware, (req, res) => {
+router.post('/api/consultas', authMiddleware, (req, res) => {
   const { id_cliente, mensaje, tipo } = req.body; 
   if (!id_cliente || !mensaje || !tipo) {
    return res.status(400).json({ status: 400, message: 'Faltan datos en la consulta' });
