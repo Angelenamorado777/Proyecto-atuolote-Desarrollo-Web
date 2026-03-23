@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const authMiddleware = require('../middleware/authMiddleware');
-
+const axios = require('axios');
 
 router.get('/api/vehiculos', (req, res) => {
     const query = 'SELECT * FROM vehiculos';
@@ -29,6 +29,52 @@ router.get('/api/vehiculos/:id', (req, res) => {
         } return res.json(results[0]);
     });
 });
+
+router.get('/api/vehiculos/:id/precios', async (req, res) => {
+    const { id } = req.params;
+    const apiKey = process.env.EXCHANGE_API_KEY;
+
+    try {
+        // 1. Obtener el vehículo de la BD
+        const db = require('../config/db');
+        db.query('SELECT * FROM vehiculos WHERE id = ?', [id], async (error, results) => {
+            if (error) return res.status(500).json({ message: 'Error al obtener el vehículo' });
+            if (results.length === 0) return res.status(404).json({ message: 'Vehículo no encontrado' });
+
+            const vehiculo = results[0];
+            const precioUSD = vehiculo.precio;
+
+            // 2. Obtener tasas de cambio
+            const response = await axios.get(
+                `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`
+            );
+
+            const rates = response.data.conversion_rates;
+
+            // 3. Devolver el precio en múltiples monedas
+            return res.json({
+                vehiculo: {
+                    id: vehiculo.id,
+                    marca: vehiculo.marca,
+                    modelo: vehiculo.modelo,
+                    anio: vehiculo.anio,
+                },
+                precios: {
+                    USD: precioUSD,
+                    HNL: +(precioUSD * rates.HNL).toFixed(2),
+                    EUR: +(precioUSD * rates.EUR).toFixed(2),
+                    MXN: +(precioUSD * rates.MXN).toFixed(2),
+                    GTQ: +(precioUSD * rates.GTQ).toFixed(2),
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        return res.status(500).json({ message: 'Error al obtener tasas de cambio' });
+    }
+});
+
 
 router.post('/api/vehiculos', authMiddleware,  (req, res) => {
     const { marca, modelo, anio, precio, disponible,  } = req.body;
