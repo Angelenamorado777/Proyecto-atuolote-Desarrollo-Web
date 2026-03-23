@@ -113,7 +113,7 @@ Asegúrate de tener instalado lo siguiente antes de continuar:
 
 - [Node.js](https://nodejs.org/) v18 o superior
 - [MySQL](https://www.mysql.com/) v8 o superior
-- [Angular CLI](https://angular.io/cli) v17 o superior
+- [Angular CLI](https://angular.io/cli) v17 o superior y instalar de manera global
 - [Git](https://git-scm.com/)
 
 Verificar instalaciones:
