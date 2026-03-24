@@ -1,31 +1,34 @@
 const express = require('express');
-const mysql = require('mysql2');
-
 const app = express();
+require('dotenv').config();
+const cors = require('cors');
+const authRoute = require('./routes/authRoute');
+const ventasRoute = require('./routes/ventasRoute');
+const exchangeRoute = require('./routes/exchangeRoute');
 
 app.use(express.json());
-
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'autolote_user',
-    password: 'autolote1234',
-    database: 'autolote_db'
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err.message);
-        return;
-    }
-    console.log('Conexión exitosa a MySQL');
-});
+app.use(cors());
+app.use('/', exchangeRoute);
 
 
 
+const clientesRoute = require('./routes/clientesRoute')
+const vehiculosRoute = require('./routes/vehiculosRoute');
 
 
 
-const PORT = 3000;
+app.use(express.json());
+app.use(cors());
+
+app.use('/', vehiculosRoute);
+app.use('/', authRoute);
+app.use('/', ventasRoute);
+app.use('/', clientesRoute);
+
+
+
+
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
